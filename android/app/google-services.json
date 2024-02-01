@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "599547510953",
+    "project_id": "testing-1c59b",
+    "storage_bucket": "testing-1c59b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599547510953:android:27e54ed0b69d5bf658a9b8",
+        "android_client_info": {
+          "package_name": "com.example.firebasebloc_crud"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClFIzrqMUmFvKrTZRvBiI31sGIVm1JNlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
