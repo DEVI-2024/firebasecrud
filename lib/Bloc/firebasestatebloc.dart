@@ -12,7 +12,8 @@ class TodoInitial extends TodoState{}
 class TodoLoading extends TodoState{}
 
 class TodoLoaded extends TodoState{
-  late final List<Todo>? todos;
+  final List<Todo>? todos;
+  TodoLoaded(this.todos);
 }
 
 class TodoSuccess extends TodoState{
