@@ -1,7 +1,6 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../Models/todo.dart';
+
 
 class FirestoreService {
   final CollectionReference _todosCollection = FirebaseFirestore.instance.collection('todos');
@@ -14,6 +13,7 @@ class FirestoreService {
           id: doc.id,
           title: data['title'],
           completed: data['completed'],
+          dropdown: data['dropdown'],
         );
       }).toList();
     });
@@ -23,6 +23,7 @@ class FirestoreService {
     return _todosCollection.add({
       'title': todo.title,
       'completed': todo.completed,
+      'dropdown' : todo.dropdown
     });
   }
 
@@ -30,6 +31,7 @@ class FirestoreService {
     return _todosCollection.doc(todo.id).update({
       'title': todo.title,
       'completed': todo.completed,
+      'dropdown' : todo.dropdown
     });
   }
 

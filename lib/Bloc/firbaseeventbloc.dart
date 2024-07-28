@@ -11,6 +11,7 @@ abstract class todoevent {}
 class AddTodo extends todoevent{
    final Todo todo;
   AddTodo(this.todo);
+
 }
 
 class UpdateTodo extends todoevent{

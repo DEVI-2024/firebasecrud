@@ -1,4 +1,5 @@
 import 'package:firebasebloc_crud/Models/todo.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../Bloc/firbaseeventbloc.dart';
@@ -13,20 +14,26 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-
   @override
   void initState() {
     BlocProvider.of<TodoBloc>(context).add(LoadTodos());
     super.initState();
-
   }
+
+  final List<String> taskTags = ['Task1', 'Task2', 'Other'];
+  String selectedValue = '';
 
   @override
   Widget build(BuildContext context) {
     final TodoBloc todoBloc = BlocProvider.of<TodoBloc>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Firestore'),
+        backgroundColor: Colors.cyanAccent,
+        centerTitle: true,
+        title: const Text(
+          'Firestore',
+          style: TextStyle(color: Colors.orangeAccent),
+        ),
       ),
       body: BlocBuilder<TodoBloc, TodoState>(
         builder: (context, state) {
@@ -40,11 +47,13 @@ class _HomeViewState extends State<HomeView> {
                 final todo = todos?[index];
                 return ListTile(
                   title: Text(todo!.title),
+                  subtitle: Text(todo.dropdown),
                   leading: Checkbox(
                     value: todo.completed,
                     onChanged: (value) {
                       final updatedTodo = todo.copyWith(completed: value);
                       todoBloc.add(UpdateTodo(updatedTodo));
+
                     },
                   ),
                   trailing: IconButton(
@@ -69,44 +78,86 @@ class _HomeViewState extends State<HomeView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddTodoDialog(context);
-
         },
         child: const Icon(Icons.add),
       ),
     );
   }
+
   void _showAddTodoDialog(BuildContext context) {
     final titleController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const  Text('Add Todo'),
-          content: TextField(
-            controller: titleController,
-            decoration: const InputDecoration(hintText: 'Todo title'),
+        return SingleChildScrollView(
+          child: AlertDialog(
+            title: const Text('Add Todo'),
+            content: SizedBox(
+              height: 200,
+              width: 400,
+              child: Column(
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(hintText: 'Todo title'),
+                  ),
+                  DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+
+                    items: taskTags
+                        .map(
+                          (item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    //value: selectedValue,
+                    onChanged: (String? value) => setState(
+                      () {
+                        if (value != null) selectedValue = value;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Add'),
+                onPressed: () {
+                  final todo = Todo(
+                    id: DateTime.now().toString(),
+                    title: titleController.text,
+                    completed: false,
+                    dropdown: selectedValue,
+                  );
+                  BlocProvider.of<TodoBloc>(context).add(AddTodo(todo));
+                  if (kDebugMode) {
+                    print(TodoSuccess("Add todo successfully"));
+                  }
+                  Navigator.pop(context);
+                },
+              ),
+            ],
           ),
-          actions: [
-            ElevatedButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Add'),
-              onPressed: () {
-                final todo = Todo(
-                  id: DateTime.now().toString(),
-                  title: titleController.text,
-                  completed: false,
-                );
-                BlocProvider.of<TodoBloc>(context).add(AddTodo(todo));
-               print(TodoSuccess("Add todo successfully"));
-                Navigator.pop(context);
-              },
-            ),
-          ],
         );
       },
     );

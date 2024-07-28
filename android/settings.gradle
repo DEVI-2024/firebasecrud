@@ -45,8 +45,3 @@ plugins.each { name, path ->
     project(":$name").projectDir = pluginDirectory
 }
 
-//setBinding(new Binding([gradle: settings]))
-//evaluate(new File(
-//        settings.projectDir,
-//        'firebasebloc_crud/Firebase/.android/include_flutter.groovy'
-//))
